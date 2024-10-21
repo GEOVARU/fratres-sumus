@@ -1,0 +1,49 @@
+
+
+/* Estilo del título */
+.login-title {
+    color: #20419a; /* Color del título */
+    font-size: 1.5rem; /* Tamaño de fuente */
+    text-align: center; /* Centrar texto */
+    margin-bottom: 1.5rem; /* Espacio debajo del título */
+}
+
+/* Grupo de entrada */
+.input-group {
+    margin-bottom: 1.5rem; /* Espaciado entre campos */
+}
+
+/* Estilo del input */
+.text-input {
+    border: 1px solid #20419a; /* Borde color azul oscuro */
+    border-radius: 4px; /* Bordes redondeados */
+    padding: 0.5rem; /* Espaciado interno */
+    width: 100%; /* Ancho completo */
+}
+
+/* Estilo del mensaje de error */
+.input-error {
+    color: #ea5329; /* Color del mensaje de error */
+}
+
+/* Estilo del botón */
+.submit-button {
+    background-color: #109b48; /* Color de fondo del botón */
+    color: #fff; /* Color del texto */
+    width: 100%; /* Ancho completo */
+    padding: 0.75rem; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.submit-button:hover {
+    background-color: #0e7a3e; /* Color más oscuro al pasar el mouse */
+}
+
+/* Estilo para mensajes de estado */
+.status-message {
+    color: #109b48; /* Color del mensaje de estado */
+    font-weight: bold; /* Negrita */
+    text-align: center; /* Centrar texto */
+    margin-bottom: 1rem; /* Espacio debajo del mensaje */
+}
