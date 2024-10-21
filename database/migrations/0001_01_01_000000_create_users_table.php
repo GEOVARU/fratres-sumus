@@ -12,12 +12,48 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
+            // Llave primaria
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+
+            // Información del usuario
+            $table->string('primer_nombre', 50);
+            $table->string('segundo_nombre', 50)->nullable();
+            $table->string('otros_nombres', 100)->nullable();
+            $table->string('primer_apellido', 100);
+            $table->string('segundo_apellido', 100)->nullable();
+
+            // Documento de identificación
+            $table->integer('tipo_documento_identificacion');
+            $table->string('identificacion', 25)->unique();
+
+            // Teléfonos
+            $table->string('telefono_1', 20);
+            $table->string('telefono_2', 20)->nullable();
+
+            // Información de usuario y autenticación
+            $table->string('usuario', 25)->unique();
+            $table->string('correo_electronico', 150)->unique();
+            $table->timestamp('correo_electronico_verified_at')->nullable();
             $table->string('password');
+
+            // Ubicación
+            $table->integer('pais');
+            $table->integer('estado');
+            $table->integer('ciudad');
+            $table->string('direccion', 100);
+
+            // Información adicional
+            $table->string('colegiado', 100)->nullable();
+            $table->integer('tipo_usuario');
+            $table->integer('condicion');
+            $table->string('fotografia', 100)->nullable();
+
+            // Información de registro y actualización
+            $table->string('usuario_registro', 25)->nullable();
+            $table->string('usuario_actualiza', 25);
+
             $table->rememberToken();
+            // Timestamps para la fecha de creación y actualización
             $table->timestamps();
         });
 
