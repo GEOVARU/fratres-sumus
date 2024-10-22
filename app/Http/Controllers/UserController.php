@@ -12,13 +12,13 @@ class UserController extends Controller
     // Muestra la lista de usuarios activos
     public function index()
     {
-        // Obtiene los usuarios ordenados por 'condicion' y luego por 'id'
-        $users = User::orderBy('condicion', 'desc') // 1 primero, 0 después
-            ->orderBy('id', 'asc') // Ordenar por id de menor a mayor
+        $users = User::with('tipoUsuario') // Carga la relación con tipos_usuarios
+            ->orderBy('condicion', 'desc')
+            ->orderBy('id', 'asc')
             ->get();
 
         return Inertia::render('User/index', [
-            'users' => $users, // Pasa los usuarios a la vista
+            'users' => $users,
         ]);
     }
 

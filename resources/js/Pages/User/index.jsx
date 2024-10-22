@@ -88,6 +88,7 @@ const UserIndex = ({ users }) => {
                         <tr>
                             <th className="px-4 py-2">Nombre Completo</th>
                             <th className="px-4 py-2">Usuario</th>
+                            <th className="px-4 py-2">Tipo</th>
                             <th className="px-4 py-2">Telefono 1</th>
                             <th className="px-4 py-2">Correo Electrónico</th>
                             <th className="px-4 py-2">Identificacion</th>
@@ -102,6 +103,7 @@ const UserIndex = ({ users }) => {
                                 <tr key={user.id} className="border-t">
                                     <td className="px-4 py-2">{user.primer_nombre} {user.segundo_nombre}  {user.otros_nombres}    {user.primer_apellido} {user.segundo_apellido}</td>
                                     <td className="px-4 py-2">{user.usuario}</td>
+                                    <td className="px-4 py-2">{user.tipoUsuario?.descripcion}</td>
                                     <td className="px-4 py-2">{user.telefono_1}</td>
                                     <td className="px-4 py-2">{user.correo_electronico}</td>
                                     <td className="px-4 py-2">{user.identificacion}</td>
