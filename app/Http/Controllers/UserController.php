@@ -155,6 +155,13 @@ class UserController extends Controller
     {
         $user->condicion = 0;
         $user->save();
-        return redirect()->route('users.index')->with('success', 'Usuario desactivado correctamente.'); // Mensaje de éxito
+        return redirect()->route('users.index')->with('success', 'Usuario desactivado correctamente.');
+    }
+
+    public function active(User $user)
+    {
+        $user->condicion = 1;
+        $user->save();
+        return redirect()->route('users.index')->with('success', 'Usuario activado correctamente.');
     }
 }

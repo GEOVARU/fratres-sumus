@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, Head } from '@inertiajs/react';
 import '../../../css/secciones.css'; // Archivo CSS para estilos
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { FaUserEdit,FaUserCheck,FaUserAltSlash  } from 'react-icons/fa';
 
 const UserIndex = ({ users }) => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -23,6 +24,27 @@ const UserIndex = ({ users }) => {
 
                 // Aquí puedes manejar la respuesta, por ejemplo, actualizar el estado
                 console.log(`Usuario con ID ${userId} desactivado.`);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    };
+
+    const handleActive = async (userId) => {
+        const confirmActive = window.confirm('¿Estás seguro de que deseas activar este usuario?');
+        if (confirmActive) {
+            try {
+                const response = await fetch(`/users/active/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al activar el usuario.');
+                }
             } catch (error) {
                 console.error(error.message);
             }
@@ -55,7 +77,7 @@ const UserIndex = ({ users }) => {
                 <h1 className="text-2xl font-bold mb-4">Usuarios</h1>
                 <Link
                     href="/users/create"
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+                    className=" add-button"
                 >
                     Agregar Nuevo Usuario
                 </Link>
@@ -86,20 +108,24 @@ const UserIndex = ({ users }) => {
                                     <td className="px-4 py-2">{user.condicion === 1 ? 'Activo' : 'Inactivo'}</td>
                                     <td className="px-4 py-2">{formatDate(user.updated_at)}</td>
 
-                                    <td className="px-4 py-2">
-                                        <Link
-                                            href={`/users/${user.id}`} // Usar el ID del usuario en la URL
-                                            className="edit-button bg-blue-500 text-white px-2 py-1 rounded mr-2"
-                                        >
-                                            Editar
-                                        </Link>
+                                    <td className="px-4 py-2 btn-icon">
+                                        {
+                                            user.condicion === 1 ?
+                                                <>
+                                                    <Link to={`/users/${user.id}`}>
+                                                        <FaUserEdit className="edit-button" />
+                                                    </Link>
 
-                                        <button
-                                            className="delete-button bg-red-500 text-white px-2 py-1 rounded"
-                                            onClick={() => handleDelete(user.id)}
-                                        >
-                                            Desactivar
-                                        </button>
+                                                    <button onClick={() => handleDelete(user.id)}>
+                                                        <FaUserAltSlash className="delete-button" />
+                                                    </button>
+                                                </>
+                                                :
+                                                <button onClick={() => handleActive(user.id)}>
+                                                    <FaUserCheck  className="active-button" />
+                                                </button>
+                                        }
+
                                     </td>
                                 </tr>
                             ))
