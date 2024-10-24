@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react';
 import '../../../css/secciones.css'; // Archivo CSS para estilos
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const CreateUser = () => {
+const CreateUser = ({ tiposUsuarios, pais }) => {
     const { data, setData, post, processing, errors } = useForm({
         primer_nombre: '',
         segundo_nombre: '',
@@ -227,13 +227,20 @@ const CreateUser = () => {
                             <label htmlFor="pais" className="block text-sm font-medium text-gray-700">
                                 País
                             </label>
-                            <input
+                            <select
+                                value={data.pais}
+                                onChange={(e) => setData('pais', e.target.value)}
                                 id="pais"
                                 type="text"
-                                value={data.pais}
-                                onChange={e => setData('pais', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar tipo de usuario</option>
+                                {pais.map(info => (
+                                    <option key={info.id} value={info.id}>
+                                        {info.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.pais && <span className="text-red-500 text-sm">{errors.pais}</span>}
                         </div>
 
@@ -302,13 +309,20 @@ const CreateUser = () => {
                             <label htmlFor="tipo_usuario" className="block text-sm font-medium text-gray-700">
                                 Tipo de Usuario
                             </label>
-                            <input
+                            <select
+                                value={data.tipo_usuario}
+                                onChange={(e) => setData('tipo_usuario', e.target.value)}
                                 id="tipo_usuario"
                                 type="text"
-                                value={data.tipo_usuario}
-                                onChange={e => setData('tipo_usuario', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar tipo de usuario</option>
+                                {tiposUsuarios.map(tipo => (
+                                    <option key={tipo.id} value={tipo.id}>
+                                        {tipo.descripcion}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.tipo_usuario && <span className="text-red-500 text-sm">{errors.tipo_usuario}</span>}
                         </div>
                     </div>

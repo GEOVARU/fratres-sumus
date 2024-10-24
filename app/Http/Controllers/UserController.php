@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pais;
+use App\Models\TipoUsuario;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -12,21 +14,29 @@ class UserController extends Controller
     // Muestra la lista de usuarios activos
     public function index()
     {
-        $users = User::with('tipoUsuario') // Carga la relación con tipos_usuarios
+        $users = User::with('TypeUser')
             ->orderBy('condicion', 'desc')
             ->orderBy('id', 'asc')
             ->get();
 
         return Inertia::render('User/index', [
-            'users' => $users,
+            'users' => $users, // Asegúrate que la relación 'tipoUsuario' está cargada
         ]);
     }
 
 
     public function create()
     {
-        return Inertia::render('User/create'); // Retorna la vista de creación de usuario
+        // Obtener todos los tipos de usuario
+        $tiposUsuarios = TipoUsuario::all();
+        $pais = Pais::all();
+
+        return Inertia::render('User/create', [
+            'tiposUsuarios' => $tiposUsuarios,
+            'pais' => $pais
+        ]);
     }
+
     // Almacena un nuevo usuario
     public function store(Request $request)
     {
