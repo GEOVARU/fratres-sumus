@@ -90,7 +90,6 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Usuario creado correctamente');
     }
 
-    // Muestra un usuario específico para editar
     public function edit(User $user)
     {
         return Inertia::render('User/edit', [
@@ -98,10 +97,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(
-        Request $request,
-        $id
-    ) {
+    public function update(Request $request, $id)
+    {
         // Validación de los datos
         $validatedData = $request->validate([
             'primer_nombre' => 'required|string|max:50',
@@ -165,7 +162,10 @@ class UserController extends Controller
     {
         $user->condicion = 0;
         $user->save();
-        return redirect()->route('users.index')->with('success', 'Usuario desactivado correctamente.');
+
+        return response()->json([
+            'message' => 'Usuario desactivado correctamente.',
+        ], 200);
     }
 
     public function active(User $user)

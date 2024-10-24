@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import '../../../css/secciones.css'; // Archivo CSS para estilos
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
@@ -24,6 +24,34 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
         colegiado: '',
         tipo_usuario: '',
     });
+
+    const [estados, setEstados] = useState([]);
+    const [ciudades, setCiudades] = useState([]);
+
+    // Función para cargar los estados según el país seleccionado
+    useEffect(() => {
+        if (data.pais) {
+            fetch(`/api/estados/${data.pais}`) // Cambia esta ruta según tu backend
+                .then(response => response.json())
+                .then(estadosData => setEstados(estadosData))
+                .catch(error => console.error('Error al cargar los estados:', error));
+        } else {
+            setEstados([]);
+            setCiudades([]);
+        }
+    }, [data.pais]);
+
+    // Función para cargar las ciudades según el estado seleccionado
+    useEffect(() => {
+        if (data.estado) {
+            fetch(`/api/ciudades/${data.estado}`) // Cambia esta ruta según tu backend
+                .then(response => response.json())
+                .then(ciudadesData => setCiudades(ciudadesData))
+                .catch(error => console.error('Error al cargar las ciudades:', error));
+        } else {
+            setCiudades([]);
+        }
+    }, [data.estado]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -192,7 +220,7 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                             {errors.usuario && <span className="text-red-500 text-sm">{errors.usuario}</span>}
                         </div>
 
-                        {/* Correo electrónico */}
+                        {/* Correo Electrónico */}
                         <div>
                             <label htmlFor="correo_electronico" className="block text-sm font-medium text-gray-700">
                                 Correo Electrónico
@@ -210,7 +238,7 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                         {/* Password */}
                         <div>
                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                                Password
+                                Contraseña
                             </label>
                             <input
                                 id="password"
@@ -228,16 +256,15 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                                 País
                             </label>
                             <select
-                                value={data.pais}
-                                onChange={(e) => setData('pais', e.target.value)}
                                 id="pais"
-                                type="text"
+                                value={data.pais}
+                                onChange={e => setData('pais', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             >
-                                <option value="">Seleccionar tipo de usuario</option>
-                                {pais.map(info => (
-                                    <option key={info.id} value={info.id}>
-                                        {info.nombre}
+                                <option value="">Seleccionar País</option>
+                                {pais.map(paisItem => (
+                                    <option key={paisItem.id} value={paisItem.id}>
+                                        {paisItem.nombre}
                                     </option>
                                 ))}
                             </select>
@@ -249,13 +276,20 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                             <label htmlFor="estado" className="block text-sm font-medium text-gray-700">
                                 Estado
                             </label>
-                            <input
+                            <select
                                 id="estado"
-                                type="text"
                                 value={data.estado}
                                 onChange={e => setData('estado', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                                disabled={!data.pais} // Deshabilita si no hay país seleccionado
+                            >
+                                <option value="">Seleccionar Estado</option>
+                                {estados.map(estado => (
+                                    <option key={estado.id} value={estado.id}>
+                                        {estado.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.estado && <span className="text-red-500 text-sm">{errors.estado}</span>}
                         </div>
 
@@ -264,13 +298,20 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                             <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">
                                 Ciudad
                             </label>
-                            <input
+                            <select
                                 id="ciudad"
-                                type="text"
                                 value={data.ciudad}
                                 onChange={e => setData('ciudad', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                                disabled={!data.estado} // Deshabilita si no hay estado seleccionado
+                            >
+                                <option value="">Seleccionar Ciudad</option>
+                                {ciudades.map(ciudad => (
+                                    <option key={ciudad.id} value={ciudad.id}>
+                                        {ciudad.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.ciudad && <span className="text-red-500 text-sm">{errors.ciudad}</span>}
                         </div>
 
@@ -304,22 +345,21 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                             {errors.colegiado && <span className="text-red-500 text-sm">{errors.colegiado}</span>}
                         </div>
 
-                        {/* Tipo de usuario */}
+                        {/* Tipo de Usuario */}
                         <div>
                             <label htmlFor="tipo_usuario" className="block text-sm font-medium text-gray-700">
                                 Tipo de Usuario
                             </label>
                             <select
-                                value={data.tipo_usuario}
-                                onChange={(e) => setData('tipo_usuario', e.target.value)}
                                 id="tipo_usuario"
-                                type="text"
+                                value={data.tipo_usuario}
+                                onChange={e => setData('tipo_usuario', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             >
-                                <option value="">Seleccionar tipo de usuario</option>
-                                {tiposUsuarios.map(tipo => (
-                                    <option key={tipo.id} value={tipo.id}>
-                                        {tipo.descripcion}
+                                <option value="">Seleccionar Tipo de Usuario</option>
+                                {tiposUsuarios.map(tipoUsuario => (
+                                    <option key={tipoUsuario.id} value={tipoUsuario.id}>
+                                        {tipoUsuario.tipo}
                                     </option>
                                 ))}
                             </select>
@@ -330,10 +370,10 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                     <div className="flex justify-end">
                         <button
                             type="submit"
-                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             disabled={processing}
+                            className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700"
                         >
-                            Guardar
+                            Crear Usuario
                         </button>
                     </div>
                 </form>

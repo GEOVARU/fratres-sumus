@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ServiciosApiController; // Importar el nuevo controlador
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -15,13 +16,12 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store']);
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::post('/users/active/{user}', [UserController::class, 'active'])->name('users.active');
 
+    // api
+    Route::get('/api/estados/{pais}', [ServiciosApiController::class, 'pais'])->name('api.pais');
+
+    Route::get('/api/ciudades/{estado}', [ServiciosApiController::class, 'estado'])->name('api.estado');
 });
 
 require __DIR__ . '/auth.php';

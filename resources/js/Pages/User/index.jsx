@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Head } from '@inertiajs/react';
 import '../../../css/secciones.css';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FaUserEdit, FaUserCheck, FaUserAltSlash } from 'react-icons/fa';
 
-const UserIndex = ({ users }) => {
-    const [csrfToken, setCsrfToken] = React.useState(null);
+const UserIndex = ({ users: initialUsers }) => {
+    const [users, setUsers] = useState(initialUsers);  // Mantén el estado de los usuarios
+    const [csrfToken, setCsrfToken] = useState(null);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         if (token) {
             setCsrfToken(token);
         }
     }, []);
 
+    // Función para desactivar usuario
     const handleDelete = async (userId) => {
         const confirmDelete = window.confirm('¿Estás seguro de que deseas desactivar este usuario?');
         if (confirmDelete) {
@@ -30,6 +32,14 @@ const UserIndex = ({ users }) => {
                     alert('Ocurrió un error al realizar la operación. Inténtalo nuevamente.');
                     throw new Error('Error al desactivar el usuario.');
                 }
+
+                // Actualiza la lista de usuarios en el frontend
+                setUsers((prevUsers) =>
+                    prevUsers.map((user) =>
+                        user.id === userId ? { ...user, condicion: 0 } : user
+                    )
+                );
+
                 console.log(`Usuario con ID ${userId} desactivado.`);
             } catch (error) {
                 console.error(error.message);
@@ -37,6 +47,7 @@ const UserIndex = ({ users }) => {
         }
     };
 
+    // Función para activar usuario
     const handleActive = async (userId) => {
         const confirmActive = window.confirm('¿Estás seguro de que deseas activar este usuario?');
         if (confirmActive) {
@@ -53,12 +64,22 @@ const UserIndex = ({ users }) => {
                     alert('Ocurrió un error al realizar la operación. Inténtalo nuevamente.');
                     throw new Error('Error al activar el usuario.');
                 }
+
+                // Actualiza la lista de usuarios en el frontend
+                setUsers((prevUsers) =>
+                    prevUsers.map((user) =>
+                        user.id === userId ? { ...user, condicion: 1 } : user
+                    )
+                );
+
+                console.log(`Usuario con ID ${userId} activado.`);
             } catch (error) {
                 console.error(error.message);
             }
         }
     };
 
+    // Formatear fechas
     const formatDate = (dateString) => {
         if (!dateString) return 'No actualizado';
         const options = {
