@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pais;
+use App\Models\TipoDocumento;
 use App\Models\TipoUsuario;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -30,10 +32,12 @@ class UserController extends Controller
         // Obtener todos los tipos de usuario
         $tiposUsuarios = TipoUsuario::all();
         $pais = Pais::all();
+        $documento = TipoDocumento::all();
 
         return Inertia::render('User/create', [
             'tiposUsuarios' => $tiposUsuarios,
-            'pais' => $pais
+            'pais' => $pais,
+            'documento' => $documento
         ]);
     }
 
@@ -92,8 +96,15 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $tiposUsuarios = TipoUsuario::all();
+        $pais = Pais::all();
+        $documento = TipoDocumento::all();
+
         return Inertia::render('User/edit', [
-            'user' => $user, // Pasa el usuario a la vista de edición
+            'user' => $user,
+            'tiposUsuarios' => $tiposUsuarios,
+            'pais' => $pais,
+            'documento' => $documento
         ]);
     }
 
@@ -112,7 +123,7 @@ class UserController extends Controller
             'telefono_2' => 'nullable|string|max:20',
             'usuario' => 'required|string|max:25|unique:users,usuario,' . $id,
             'correo_electronico' => 'required|email|max:150|unique:users,correo_electronico,' . $id,
-            'password' => 'nullable|string|min:6|confirmed',
+            'password' => 'nullable|string|min:8',
             'pais' => 'required|integer',
             'estado' => 'required|integer',
             'ciudad' => 'required|integer',

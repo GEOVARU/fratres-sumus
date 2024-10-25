@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react';
 import '../../../css/secciones.css'; // Archivo CSS para estilos
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const CreateUser = ({ tiposUsuarios, pais }) => {
+const CreateUser = ({ tiposUsuarios, pais, documento }) => {
     const { data, setData, post, processing, errors } = useForm({
         primer_nombre: '',
         segundo_nombre: '',
@@ -150,13 +150,19 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                             <label htmlFor="tipo_documento_identificacion" className="block text-sm font-medium text-gray-700">
                                 Tipo de Documento de Identificación
                             </label>
-                            <input
+                            <select
                                 id="tipo_documento_identificacion"
-                                type="text"
                                 value={data.tipo_documento_identificacion}
                                 onChange={e => setData('tipo_documento_identificacion', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar Tipo de Usuario</option>
+                                {documento.map(item => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.tipo_documento_identificacion && <span className="text-red-500 text-sm">{errors.tipo_documento_identificacion}</span>}
                         </div>
 
@@ -357,9 +363,9 @@ const CreateUser = ({ tiposUsuarios, pais }) => {
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                             >
                                 <option value="">Seleccionar Tipo de Usuario</option>
-                                {tiposUsuarios.map(tipoUsuario => (
-                                    <option key={tipoUsuario.id} value={tipoUsuario.id}>
-                                        {tipoUsuario.tipo}
+                                {tiposUsuarios.map(item => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.descripcion}
                                     </option>
                                 ))}
                             </select>
