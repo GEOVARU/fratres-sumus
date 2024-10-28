@@ -18,5 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(PaisSeeder::class);
         $this->call(EstadoSeeder::class);
         $this->call(CiudadSeeder::class);
+        $this->call(TipoDocumentosSeeder::class);
+        $this->call(DiaSemanaSeeder::class);
+        $this->call(TipoAsignacionesSeeder::class);
     }
 }
