@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pais;
+use App\Models\TipoDocumento;
+use App\Models\TipoUsuario;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -12,21 +16,31 @@ class UserController extends Controller
     // Muestra la lista de usuarios activos
     public function index()
     {
-        // Obtiene los usuarios ordenados por 'condicion' y luego por 'id'
-        $users = User::orderBy('condicion', 'desc') // 1 primero, 0 después
-            ->orderBy('id', 'asc') // Ordenar por id de menor a mayor
+        $users = User::with('TypeUser')
+            ->orderBy('condicion', 'desc')
+            ->orderBy('id', 'asc')
             ->get();
 
         return Inertia::render('User/index', [
-            'users' => $users, // Pasa los usuarios a la vista
+            'users' => $users, // Asegúrate que la relación 'tipoUsuario' está cargada
         ]);
     }
 
 
     public function create()
     {
-        return Inertia::render('User/create'); // Retorna la vista de creación de usuario
+        // Obtener todos los tipos de usuario
+        $tiposUsuarios = TipoUsuario::all();
+        $pais = Pais::all();
+        $documento = TipoDocumento::all();
+
+        return Inertia::render('User/create', [
+            'tiposUsuarios' => $tiposUsuarios,
+            'pais' => $pais,
+            'documento' => $documento
+        ]);
     }
+
     // Almacena un nuevo usuario
     public function store(Request $request)
     {
@@ -80,18 +94,22 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Usuario creado correctamente');
     }
 
-    // Muestra un usuario específico para editar
     public function edit(User $user)
     {
+        $tiposUsuarios = TipoUsuario::all();
+        $pais = Pais::all();
+        $documento = TipoDocumento::all();
+
         return Inertia::render('User/edit', [
-            'user' => $user, // Pasa el usuario a la vista de edición
+            'user' => $user,
+            'tiposUsuarios' => $tiposUsuarios,
+            'pais' => $pais,
+            'documento' => $documento
         ]);
     }
 
-    public function update(
-        Request $request,
-        $id
-    ) {
+    public function update(Request $request, $id)
+    {
         // Validación de los datos
         $validatedData = $request->validate([
             'primer_nombre' => 'required|string|max:50',
@@ -105,7 +123,7 @@ class UserController extends Controller
             'telefono_2' => 'nullable|string|max:20',
             'usuario' => 'required|string|max:25|unique:users,usuario,' . $id,
             'correo_electronico' => 'required|email|max:150|unique:users,correo_electronico,' . $id,
-            'password' => 'nullable|string|min:6|confirmed',
+            'password' => 'nullable|string|min:8',
             'pais' => 'required|integer',
             'estado' => 'required|integer',
             'ciudad' => 'required|integer',
@@ -155,6 +173,16 @@ class UserController extends Controller
     {
         $user->condicion = 0;
         $user->save();
-        return redirect()->route('users.index')->with('success', 'Usuario desactivado correctamente.'); // Mensaje de éxito
+
+        return response()->json([
+            'message' => 'Usuario desactivado correctamente.',
+        ], 200);
+    }
+
+    public function active(User $user)
+    {
+        $user->condicion = 1;
+        $user->save();
+        return redirect()->route('users.index')->with('success', 'Usuario activado correctamente.');
     }
 }

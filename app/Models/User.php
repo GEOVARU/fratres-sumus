@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+// Otras importaciones que podrías tener aquí
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -9,6 +11,13 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.
@@ -35,12 +44,13 @@ class User extends Authenticatable
         'colegiado',
         'tipo_usuario',
         'condicion',
+        'fotografia',
         'usuario_registro',
         'usuario_actualiza',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * The attributes that should be hidden for arrays.
      *
      * @var array<int, string>
      */
@@ -50,15 +60,30 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast to native types.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
+    protected $casts = [
+        'correo_electronico_verified_at' => 'datetime',
+        'tipo_documento_identificacion' => 'integer',
+        'pais' => 'integer',
+        'estado' => 'integer',
+        'ciudad' => 'integer',
+        'tipo_usuario' => 'integer',
+        'condicion' => 'integer',
+    ];
+
+    /**
+     * Relación con el modelo TipoUsuario.
+     * Un usuario pertenece a un TipoUsuario.
+     */
+    public function TypeUser()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(TipoUsuario::class, 'tipo_usuario', 'id');
+    }
+    public function pais()
+    {
+        return $this->belongsTo(Pais::class, 'pais', 'id');
     }
 }

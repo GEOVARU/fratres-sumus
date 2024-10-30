@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from '@inertiajs/react';
 import '../../../css/secciones.css'; // Archivo CSS para estilos
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
-const EditUser = ({ user }) => {
+const EditUser = ({ user, tiposUsuarios, pais, documento }) => {
     const { data, setData, put, processing, errors } = useForm({
         primer_nombre: user.primer_nombre || '',
         segundo_nombre: user.segundo_nombre || '',
@@ -25,10 +25,38 @@ const EditUser = ({ user }) => {
         tipo_usuario: user.tipo_usuario || '',
     });
 
+    const [estados, setEstados] = useState([]);
+    const [ciudades, setCiudades] = useState([]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         put(`/users/${user.id}`);
     };
+
+    // Función para cargar los estados según el país seleccionado
+    useEffect(() => {
+        if (data.pais) {
+            fetch(`/api/estados/${data.pais}`) // Cambia esta ruta según tu backend
+                .then(response => response.json())
+                .then(estadosData => setEstados(estadosData))
+                .catch(error => console.error('Error al cargar los estados:', error));
+        } else {
+            setEstados([]);
+            setCiudades([]);
+        }
+    }, [data.pais]);
+
+    // Función para cargar las ciudades según el estado seleccionado
+    useEffect(() => {
+        if (data.estado) {
+            fetch(`/api/ciudades/${data.estado}`) // Cambia esta ruta según tu backend
+                .then(response => response.json())
+                .then(ciudadesData => setCiudades(ciudadesData))
+                .catch(error => console.error('Error al cargar las ciudades:', error));
+        } else {
+            setCiudades([]);
+        }
+    }, [data.estado]);
 
     useEffect(() => {
         // Cargar los datos del usuario si es necesario
@@ -127,13 +155,19 @@ const EditUser = ({ user }) => {
                             <label htmlFor="tipo_documento_identificacion" className="block text-sm font-medium text-gray-700">
                                 Tipo de Documento de Identificación
                             </label>
-                            <input
+                            <select
                                 id="tipo_documento_identificacion"
-                                type="text"
                                 value={data.tipo_documento_identificacion}
                                 onChange={e => setData('tipo_documento_identificacion', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar Tipo de Usuario</option>
+                                {documento.map(item => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.tipo_documento_identificacion && <span className="text-red-500 text-sm">{errors.tipo_documento_identificacion}</span>}
                         </div>
 
@@ -231,28 +265,45 @@ const EditUser = ({ user }) => {
                             <label htmlFor="pais" className="block text-sm font-medium text-gray-700">
                                 País
                             </label>
-                            <input
+                            <select
                                 id="pais"
-                                type="text"
-                                value={data.pais}
+                                value={data.pais} // Mantiene el valor seleccionado según data.pais
                                 onChange={e => setData('pais', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar País</option>
+                                {pais.map(item => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.nombre}
+                                    </option>
+                                ))}
+
+                            </select>
                             {errors.pais && <span className="text-red-500 text-sm">{errors.pais}</span>}
                         </div>
+
 
                         {/* Estado */}
                         <div>
                             <label htmlFor="estado" className="block text-sm font-medium text-gray-700">
                                 Estado
                             </label>
-                            <input
+
+                            <select
                                 id="estado"
-                                type="text"
                                 value={data.estado}
                                 onChange={e => setData('estado', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                                disabled={!data.pais}
+                            >
+                                <option value="">Seleccionar Estado</option>
+                                {estados.map(estado => (
+                                    <option key={estado.id} value={estado.id}>
+                                        {estado.nombre}
+                                    </option>
+                                ))}
+                            </select>
+
                             {errors.estado && <span className="text-red-500 text-sm">{errors.estado}</span>}
                         </div>
 
@@ -261,13 +312,20 @@ const EditUser = ({ user }) => {
                             <label htmlFor="ciudad" className="block text-sm font-medium text-gray-700">
                                 Ciudad
                             </label>
-                            <input
+                            <select
                                 id="ciudad"
-                                type="text"
                                 value={data.ciudad}
                                 onChange={e => setData('ciudad', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                                disabled={!data.estado} // Deshabilita si no hay estado seleccionado
+                            >
+                                <option value="">Seleccionar Ciudad</option>
+                                {ciudades.map(ciudad => (
+                                    <option key={ciudad.id} value={ciudad.id}>
+                                        {ciudad.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.ciudad && <span className="text-red-500 text-sm">{errors.ciudad}</span>}
                         </div>
 
@@ -306,13 +364,19 @@ const EditUser = ({ user }) => {
                             <label htmlFor="tipo_usuario" className="block text-sm font-medium text-gray-700">
                                 Tipo de Usuario
                             </label>
-                            <input
+                            <select
                                 id="tipo_usuario"
-                                type="text"
                                 value={data.tipo_usuario}
                                 onChange={e => setData('tipo_usuario', e.target.value)}
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
+                            >
+                                <option value="">Seleccionar Tipo de Usuario</option>
+                                {tiposUsuarios.map(item => (
+                                    <option key={item.id} value={item.id}>
+                                        {item.descripcion}
+                                    </option>
+                                ))}
+                            </select>
                             {errors.tipo_usuario && <span className="text-red-500 text-sm">{errors.tipo_usuario}</span>}
                         </div>
                     </div>
