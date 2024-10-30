@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function () {
     // asignaciones
     Route::get('/asignaciones', [AsignacionController::class, 'index'])->name('asignaciones.index');
     Route::get('/asignaciones/create', [AsignacionController::class, 'create'])->name('asignaciones.create');
+    Route::post('/asignaciones', [AsignacionController::class, 'store'])->name('asignaciones.store');
+    Route::delete('/asignaciones/{item}', [AsignacionController::class, 'destroy'])->name('asignaciones.destroy');
 
     // api
     Route::get('/api/estados/{pais}', [ServiciosApiController::class, 'pais'])->name('api.pais');
