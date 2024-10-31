@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiciosApiController; // Importar el nuevo controlador
 use App\Http\Controllers\AsignacionController;
+use App\Http\Controllers\PreguntaController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -41,8 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/asignaciones/create', [AsignacionController::class, 'create'])->name('asignaciones.create');
     Route::post('/asignaciones', [AsignacionController::class, 'store'])->name('asignaciones.store');
     Route::delete('/asignaciones/{item}', [AsignacionController::class, 'destroy'])->name('asignaciones.destroy');
+    // preguntas
+    Route::get('/preguntas', [PreguntaController::class, 'index'])->name('preguntas.index');
+    Route::get('/preguntas/create', [PreguntaController::class, 'create'])->name('preguntas.create');
+    Route::post('/preguntas', [PreguntaController::class, 'store'])->name('preguntas.store');
+    Route::delete('/preguntas/{item}', [PreguntaController::class, 'destroy'])->name('preguntas.destroy');
 
-    // api
+
+
+    /**  api **/
     Route::get('/api/estados/{pais}', [ServiciosApiController::class, 'pais'])->name('api.pais');
     Route::get('/api/ciudades/{estado}', [ServiciosApiController::class, 'estado'])->name('api.estado');
 });

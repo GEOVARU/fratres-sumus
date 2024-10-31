@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Vite::prefetch(concurrency: 3);
 
-        // Compartir datos de autenticación con Inertia
         Inertia::share([
             'auth' => function () {
                 return [

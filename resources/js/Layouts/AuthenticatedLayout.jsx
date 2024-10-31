@@ -22,7 +22,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
-
+                            { }
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
                                     href={route('dashboard')}
@@ -30,18 +30,23 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Dashboard
                                 </NavLink>
-                                <NavLink
-                                    href={route('users.index')}
-                                    active={route().current('users.index')}
-                                >
-                                    Usuarios
-                                </NavLink>
-                                <NavLink
-                                    href={route('asignaciones.index')}
-                                    active={route().current('asignaciones.index')}
-                                >
-                                    Asignaciones
-                                </NavLink>
+                                {user.tipo_usuario === 1 && <>
+                                    <NavLink
+                                        href={route('users.index')}
+                                        active={route().current('users.index')}
+                                    >
+                                        Usuarios
+                                    </NavLink>
+                                </>}
+
+                                {user.tipo_usuario === (1 || 2) && <>
+                                    <NavLink
+                                        href={route('asignaciones.index')}
+                                        active={route().current('asignaciones.index')}
+                                    >
+                                        Asignaciones
+                                    </NavLink>
+                                </>}
                             </div>
                         </div>
 
@@ -146,7 +151,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         >
                             Dashboard
                         </ResponsiveNavLink>
-                         <ResponsiveNavLink
+                        <ResponsiveNavLink
                             href={route('users.index')}
                             active={route().current('users.index')}
                         >
