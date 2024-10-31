@@ -5,8 +5,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
 
-const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
-    const [asignaciones, setAsignaciones] = useState(inixialAsignaciones);
+const AsignacionesTable = ({ preguntas: inixialPreguntas }) => {
+    const [preguntas, setPreguntas] = useState(inixialPreguntas);
     const [csrfToken, setCsrfToken] = useState(null);
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
         const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este registro?');
         if (confirmDelete) {
             try {
-                const response = await fetch(`/asignaciones/${itemId}`, {
+                const response = await fetch(`/preguntas/${itemId}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -33,8 +33,7 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
                     throw new Error('Error al desactivar el registro.');
                 }
 
-                // Actualiza la lista de usuarios en el frontend
-                setAsignaciones((prevItem) =>
+                setPreguntas((prevItem) =>
                     prevItem.map((item) =>
                         item.id === itemId ? { ...item, estado: 0 } : item
                     )
@@ -48,15 +47,15 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Asignaciones
+                    Preguntas
                 </h2>
             }
         >
-            <Head title="Asignaciones" />
+            <Head title="Preguntas" />
 
             <div className="user-index p-6 bg-white shadow-sm sm:rounded-lg">
-                <Link href="/asignaciones/create" className="add-button">
-                    Agregar Nuevo Usuario
+                <Link href="/preguntas/create" className="add-button">
+                    Agregar Nueva pregunta
                 </Link>
                 <br />
                 <br />
@@ -64,45 +63,29 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
                     <thead>
                         <tr>
                             <th className="px-4 py-2">ID</th>
-                            <th className="px-4 py-2">Usuario Interesado</th>
-                            <th className="px-4 py-2">Usuario Asignado</th>
-                            <th className="px-4 py-2">Hora Inicio</th>
-                            <th className="px-4 py-2">Minuto Inicio</th>
-                            <th className="px-4 py-2">Hora Fin</th>
-                            <th className="px-4 py-2">Minuto Fin</th>
-                            <th className="px-4 py-2">Día de la Semana</th>
-                            <th className="px-4 py-2">Año</th>
+                            <th className="px-4 py-2">Pregunta</th>
                             <th className="px-4 py-2">Estado</th>
-                            <th className="px-4 py-2">Tipo de Asignación</th>
                             <th className="px-4 py-2">Usuario Registro</th>
                             <th className="px-4 py-2">Usuario Actualiza</th>
                             <th className="px-4 py-2">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {asignaciones.length > 0 ? (
-                            asignaciones.map(item => (
+                        {preguntas.length > 0 ? (
+                            preguntas.map(item => (
                                 <tr key={item.id} className="border-t">
                                     <td className="px-4 py-2">{item.id}</td>
-                                    <td className="px-4 py-2">{item.interesado ? item.interesado.usuario : 'N/A'}</td>
-                                    <td className="px-4 py-2">{item.asignado ? item.asignado.usuario : 'N/A'}</td>
-                                    <td className="px-4 py-2">{item.hora_inicio}</td>
-                                    <td className="px-4 py-2">{item.minuto_inicio}</td>
-                                    <td className="px-4 py-2">{item.hora_fin}</td>
-                                    <td className="px-4 py-2">{item.minuto_fin}</td>
-                                    <td className="px-4 py-2">{item.dia_semana ? item.dia_semana.nombre : 'N/A'}</td>
-                                    <td className="px-4 py-2">{item.anio}</td>
+                                    <td className="px-4 py-2">{item.pregunta}</td>
                                     <td className="px-4 py-2">{item.estado === 1 ? 'Activo' : 'Inactivo'}</td>
-                                    <td className="px-4 py-2">{item.tipo_item ? item.tipo_item.descripcion : 'N/A'}</td>
                                     <td className="px-4 py-2">{item.usuario_registro}</td>
                                     <td className="px-4 py-2">{item.usuario_actualiza}</td>
                                     <td className="px-4 py-2 btn-icon">
                                         {item.estado === 1 && (
                                             <>
-                                                <Link href={`/asignaciones/${item.id}`}>
+                                                <Link href={`/preguntas/${item.id}`}>
                                                     <FiEdit className="edit-button" />
                                                 </Link>
-                                                <button onClick={() => handleDelete(item.id)} aria-label="Desactivar usuario">
+                                                <button onClick={() => handleDelete(item.id)} >
                                                     <MdDelete className="delete-button" />
                                                 </button>
                                             </>

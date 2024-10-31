@@ -67,7 +67,6 @@ const CreateUser = ({ tiposUsuarios, pais, documento }) => {
             }
         >
             <div className="p-6 bg-white shadow-sm sm:rounded-lg">
-                <h1 className="text-2xl font-bold mb-4">Agregar Usuario</h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {/* Primer nombre */}

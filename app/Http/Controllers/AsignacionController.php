@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\DiaSemana;
 use App\Models\TipoAsignaciones;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AsignacionController extends Controller
 {
@@ -24,10 +26,23 @@ class AsignacionController extends Controller
     }
     public function create()
     {
+        $user = User::with('TypeUser')
+            ->where('condicion', 1)
+            ->orderBy('primer_nombre', 'asc')
+            ->get();
+
+        $beneficiarias = User::with('TypeUser')
+            ->where('condicion', 1)
+            ->where('tipo_usuario', 3)
+            ->orderBy('primer_nombre', 'asc')
+            ->get();
+
         $diasSemana = DiaSemana::all();
         $tiposAsignaciones = TipoAsignaciones::all();
 
         return Inertia::render('Asignaciones/create', [
+            'user' => $user,
+            'beneficiarias' => $beneficiarias,
             'diasSemana' => $diasSemana,
             'tiposAsignaciones' => $tiposAsignaciones,
         ]);
@@ -42,22 +57,31 @@ class AsignacionController extends Controller
             'minuto_inicio' => 'required|integer',
             'hora_fin' => 'required|integer',
             'minuto_fin' => 'required|integer',
-            'id_dia' => 'required|exists:dia_semana,id',
+            'id_dia' => 'required|integer',
             'anio' => 'required|integer',
             'id_tipo_asignacion' => 'required|exists:tipo_asignaciones,id',
-            'usuario_registro' => 'required|string|max:50',
-            'usuario_actualiza' => 'nullable|string|max:50',
         ]);
-
-        // Establecer el estado por defecto a 1
-        $data['estado'] = 1;
-
         try {
             DB::beginTransaction();
-            $asignacion = Asignaciones::create($data);
+
+            Asignaciones::create([
+                'usuario_interesado' => $data['usuario_interesado'],
+                'usuario_asignado' => $data['usuario_asignado'],
+                'hora_inicio' => $data['hora_inicio'],
+                'minuto_inicio' => $data['minuto_inicio'],
+                'hora_fin' => $data['hora_fin'],
+                'minuto_fin' => $data['minuto_fin'],
+                'id_dia' => $data['id_dia'],
+                'anio' => $data['anio'],
+                'id_tipo_asignacion' => $data['id_tipo_asignacion'],
+                'estado' => 1,
+                'usuario_registro' => Auth::user()?->usuario, // null-safe
+                'usuario_actualiza' => Auth::user()?->usuario, // null-safe
+            ]);
+
             DB::commit();
-            return redirect()->route('asignaciones.index')
-                ->with('success', 'Asignación creada exitosamente');
+
+            return redirect()->route('asignaciones.index')->with('success', 'Asignación creada correctamente');
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -100,12 +124,14 @@ class AsignacionController extends Controller
     }
 
     // Método para eliminar una asignación
-    public function destroy($id)
-    {
-        $asignacion = Asignaciones::findOrFail($id);
-        $asignacion->update(['estado' => 0]);
 
-        return redirect()->route('asignaciones.index')
-            ->with('success', 'Asignación desactivada exitosamente');
+    public function destroy(Asignaciones $item)
+    {
+        $item->estado = 0;
+        $item->save();
+
+        return response()->json([
+            'message' => 'Asignación desactivada correctamente.',
+        ], 200);
     }
 }
