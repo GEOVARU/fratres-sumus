@@ -20,34 +20,3 @@
     /* Color de fondo para encabezados */
     color: white;
 }
-
-.edit-button,
-.delete-button {
-    padding: 8px 12px;
-    margin-right: 8px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.edit-button {
-    background-color: #109b48;
-    /* Color para botón de editar */
-    color: white;
-}
-
-.delete-button {
-    background-color: #ea5329;
-    /* Color para botón de desactivar */
-    color: white;
-}
-
-.edit-button:hover {
-    background-color: #0f8c3d;
-    /* Color de hover para editar */
-}
-
-.delete-button:hover {
-    background-color: #d24524;
-    /* Color de hover para desactivar */
-}
