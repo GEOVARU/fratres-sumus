@@ -28,6 +28,7 @@ class AsignacionController extends Controller
     {
         $user = User::with('TypeUser')
             ->where('condicion', 1)
+            ->where('tipo_usuario', '!=', 3)
             ->orderBy('primer_nombre', 'asc')
             ->get();
 

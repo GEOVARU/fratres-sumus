@@ -15,36 +15,36 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
     return (
         <>
             <Head title="Welcome" />
-            <div className="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
+            <div className="bg-black  anchoPrincipal">
 
-                <nav className="-mx-3 flex flex-1 justify-end">
+                <nav className="-mx-3 flex flex-1 justify-end anchoNav">
                     {auth.user ? (
                         <Link
                             href={route('dashboard')}
                             className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                         >
-                            Dashboard
+                            Inicio
                         </Link>
                     ) : (
                         <>
                             <Link
                                 href={route('login')}
-                                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white dark:focus-visible:ring-white"
                             >
-                                Log in
+                                Iniciar Sesion
                             </Link>
-                            <Link
+                            {/* <Link
                                 href={route('register')}
                                 className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
                             >
                                 Register
-                            </Link>
+                            </Link> */}
                         </>
                     )}
                 </nav>
 
                 {/* Contenedor para la página externa */}
-                <div className="iframe-container" style={{ height: '100vh', marginTop: '20px' }}>
+                <div className="iframe-container" style={{ height: '100vh' }}>
                     <iframe
                         src="https://fundacionfs.com/"
                         title="Fundación Fratres Sumus"

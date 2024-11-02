@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiciosApiController; // Importar el nuevo controlador
 use App\Http\Controllers\AsignacionController;
+use App\Http\Controllers\AsignaPreguntasController;
 use App\Http\Controllers\PreguntaController;
 
 Route::get('/', function () {
@@ -46,9 +47,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/preguntas', [PreguntaController::class, 'index'])->name('preguntas.index');
     Route::get('/preguntas/create', [PreguntaController::class, 'create'])->name('preguntas.create');
     Route::post('/preguntas', [PreguntaController::class, 'store'])->name('preguntas.store');
+    Route::get('/preguntas/{item}', [PreguntaController::class, 'edit'])->name('preguntas.edit');
+    Route::put('/preguntas/{item}', [PreguntaController::class, 'update'])->name('preguntas.update');
     Route::delete('/preguntas/{item}', [PreguntaController::class, 'destroy'])->name('preguntas.destroy');
-
-
+    Route::post('/preguntas/active/{item}', [PreguntaController::class, 'active'])->name('preguntas.active');
+    // asignaPreguntasTipo-tipos
+    Route::get('/asignaPreguntasTipo', [AsignaPreguntasController::class, 'index'])->name('asignaPreguntasTipo.index');
+    Route::get('/asignaPreguntasTipo/create', [AsignaPreguntasController::class, 'create'])->name('asignaPreguntasTipo.create');
+    Route::post('/asignaPreguntasTipo', [AsignaPreguntasController::class, 'store'])->name('asignaPreguntasTipo.store');
+    Route::get('/asignaPreguntasTipo/{item}', [AsignaPreguntasController::class, 'edit'])->name('asignaPreguntasTipo.edit');
+    Route::put('/asignaPreguntasTipo/{item}', [AsignaPreguntasController::class, 'update'])->name('asignaPreguntasTipo.update');
+    Route::delete('/asignaPreguntasTipo/{item}', [AsignaPreguntasController::class, 'destroy'])->name('asignaPreguntasTipo.destroy');
+    Route::post('/asignaPreguntasTipo/active/{item}', [AsignaPreguntasController::class, 'active'])->name('asignaPreguntasTipo.active');
 
     /**  api **/
     Route::get('/api/estados/{pais}', [ServiciosApiController::class, 'pais'])->name('api.pais');

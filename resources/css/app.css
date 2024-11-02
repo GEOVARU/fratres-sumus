@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+.anchoPrincipal {
+    width: 98%;
+}
+
+.anchoNav {
+    width: 100%;
+    padding-left: 10px;
+}
+.iframe-container {
+    width: 102%;
+}
 .btn-icon {
     display: flex;
 }
