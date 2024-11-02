@@ -62,7 +62,7 @@ export default function Dashboard() {
                             </Link>
                         </>} */}
 
-                        <Link href="/ruta-destino" className="block overflow-hidden bg-white shadow-lg rounded-lg transition transform hover:scale-105 hover:shadow-xl">
+                        <Link href="/mis-asignaciones" className="block overflow-hidden bg-white shadow-lg rounded-lg transition transform hover:scale-105 hover:shadow-xl">
                             <div className="p-6">
                                 <h3 className="text-lg font-semibold text-gray-800">
                                     Mis Asignaciones

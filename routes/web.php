@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServiciosApiController; // Importar el nuevo controlador
 use App\Http\Controllers\AsignacionController;
 use App\Http\Controllers\AsignaPreguntasController;
+use App\Http\Controllers\MisAsignacionesController;
 use App\Http\Controllers\PreguntaController;
 
 Route::get('/', function () {
@@ -59,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/asignaPreguntasTipo/{item}', [AsignaPreguntasController::class, 'update'])->name('asignaPreguntasTipo.update');
     Route::delete('/asignaPreguntasTipo/{item}', [AsignaPreguntasController::class, 'destroy'])->name('asignaPreguntasTipo.destroy');
     Route::post('/asignaPreguntasTipo/active/{item}', [AsignaPreguntasController::class, 'active'])->name('asignaPreguntasTipo.active');
+    // mis asignaciones
+    Route::get('/mis-asignaciones', [MisAsignacionesController::class, 'index'])->name('misasignaciones.index');
 
     /**  api **/
     Route::get('/api/estados/{pais}', [ServiciosApiController::class, 'pais'])->name('api.pais');

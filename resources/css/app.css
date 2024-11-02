@@ -30,7 +30,8 @@
 
 .edit-button,
 .delete-button,
-.active-button {
+.active-button,
+.show-button {
     width: 30px;
     height: 30px;
     padding: 4px;
@@ -51,6 +52,9 @@
 .active-button {
     background-color: #20419a;
 }
+.show-button {
+    background-color: #59209a;
+}
 .edit-button:hover {
     background-color: #0f8c3d;
 }
@@ -61,4 +65,8 @@
 
 .active-button:hover {
     background-color: #1a3788;
+}
+
+.show-button:hover {
+    background-color: #531a88;
 }
