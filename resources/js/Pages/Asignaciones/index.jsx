@@ -93,7 +93,7 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
                                     <td className="px-4 py-2">{item.dia_semana ? item.dia_semana.nombre : 'N/A'}</td>
                                     <td className="px-4 py-2">{item.anio}</td>
                                     <td className="px-4 py-2">{item.estado === 1 ? 'Activo' : 'Inactivo'}</td>
-                                    <td className="px-4 py-2">{item.tipo_item ? item.tipo_item.descripcion : 'N/A'}</td>
+                                    <td className="px-4 py-2">{item.tipo_asignacion ? item.tipo_asignacion.descripcion : 'N/A'}</td>
                                     <td className="px-4 py-2">{item.usuario_registro}</td>
                                     <td className="px-4 py-2">{item.usuario_actualiza}</td>
                                     <td className="px-4 py-2 btn-icon">

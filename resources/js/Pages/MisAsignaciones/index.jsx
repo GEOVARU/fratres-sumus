@@ -4,9 +4,11 @@ import '../../../css/secciones.css';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { MdDelete } from "react-icons/md";
 import { FiEdit } from "react-icons/fi";
-import { FaCheck } from "react-icons/fa";
-const indexPageTable = ({ preguntas: inixialPreguntas }) => {
-    const [preguntas, setPreguntas] = useState(inixialPreguntas);
+import { TbReportSearch } from "react-icons/tb";
+import { TbReport } from "react-icons/tb";
+import { TbReportAnalytics } from "react-icons/tb";
+const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
+    const [asignaciones, setAsignaciones] = useState(inixialAsignaciones);
     const [csrfToken, setCsrfToken] = useState(null);
 
     useEffect(() => {
@@ -20,7 +22,7 @@ const indexPageTable = ({ preguntas: inixialPreguntas }) => {
         const confirmDelete = window.confirm('¿Estás seguro de que deseas eliminar este registro?');
         if (confirmDelete) {
             try {
-                const response = await fetch(`/preguntas/${itemId}`, {
+                const response = await fetch(`/asignaciones/${itemId}`, {
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken,
@@ -33,7 +35,8 @@ const indexPageTable = ({ preguntas: inixialPreguntas }) => {
                     throw new Error('Error al desactivar el registro.');
                 }
 
-                setPreguntas((prevItem) =>
+                // Actualiza la lista de usuarios en el frontend
+                setAsignaciones((prevItem) =>
                     prevItem.map((item) =>
                         item.id === itemId ? { ...item, estado: 0 } : item
                     )
@@ -43,51 +46,19 @@ const indexPageTable = ({ preguntas: inixialPreguntas }) => {
             }
         }
     };
-
-    const handleActive = async (itemId) => {
-        const confirmActive = window.confirm('¿Estás seguro de que deseas activar este registro?');
-        if (confirmActive) {
-            try {
-                const response = await fetch(`/preguntas/active/${itemId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!response.ok) {
-                    alert('Ocurrió un error al realizar la operación. Inténtalo sss.');
-                    throw new Error('Error al activar el registro.');
-                }
-
-                // Actualiza la lista de usuarios en el frontend
-                setPreguntas((prevItem) =>
-                    prevItem.map((item) =>
-                        item.id === itemId ? { ...item, estado: 1 } : item
-                    )
-                );
-
-            } catch (error) {
-                console.error(error.message);
-            }
-        }
-    };
-
-
     return (
         <AuthenticatedLayout
             header={
                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-                    Preguntas
+                    Asignaciones
                 </h2>
             }
         >
-            <Head title="Preguntas" />
+            <Head title="Asignaciones" />
 
             <div className="user-index p-6 bg-white shadow-sm sm:rounded-lg">
-                <Link href="/preguntas/create" className="add-button">
-                    Agregar Nueva pregunta
+                <Link href="/asignaciones/create" className="add-button">
+                    Agregar Nuevo Usuario
                 </Link>
                 <br />
                 <br />
@@ -95,40 +66,42 @@ const indexPageTable = ({ preguntas: inixialPreguntas }) => {
                     <thead>
                         <tr>
                             <th className="px-4 py-2">ID</th>
-                            <th className="px-4 py-2">Pregunta</th>
+                            <th className="px-4 py-2">Usuario Asignado</th>
+                            <th className="px-4 py-2">Inicio</th>
+                            <th className="px-4 py-2">Fin</th>
+                            <th className="px-4 py-2">Día de la Semana</th>
+                            <th className="px-4 py-2">Año</th>
                             <th className="px-4 py-2">Estado</th>
-                            <th className="px-4 py-2">Usuario Registro</th>
-                            <th className="px-4 py-2">Usuario Actualiza</th>
+                            <th className="px-4 py-2">Tipo de Asignación</th>
                             <th className="px-4 py-2">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {preguntas.length > 0 ? (
-                            preguntas.map(item => (
+                        {asignaciones.length > 0 ? (
+                            asignaciones.map(item => (
                                 <tr key={item.id} className="border-t">
                                     <td className="px-4 py-2">{item.id}</td>
-                                    <td className="px-4 py-2">{item.pregunta}</td>
+                                    <td className="px-4 py-2">{item.interesado ? item.interesado.usuario : 'N/A'}</td>
+                                    <td className="px-4 py-2">{item.hora_inicio > 9 ? item.hora_inicio : '0' + item.hora_inicio}:{item.minuto_inicio > 9 ? item.minuto_inicio : '0' + item.minuto_inicio}</td>
+                                    <td className="px-4 py-2">{item.hora_fin > 9 ? item.hora_fin : '0' + item.hora_fin}:{item.minuto_fin > 9 ? item.minuto_fin : '0' + item.minuto_fin}</td>
+                                    <td className="px-4 py-2">{item.dia_semana ? item.dia_semana.nombre : 'N/A'}</td>
+                                    <td className="px-4 py-2">{item.anio}</td>
                                     <td className="px-4 py-2">{item.estado === 1 ? 'Activo' : 'Inactivo'}</td>
-                                    <td className="px-4 py-2">{item.usuario_registro}</td>
-                                    <td className="px-4 py-2">{item.usuario_actualiza}</td>
+                                    <td className="px-4 py-2">{item.tipo_asignacion ? item.tipo_asignacion.descripcion : 'N/A'}</td>
                                     <td className="px-4 py-2 btn-icon">
-                                        {item.estado === 1 ? (
+                                        {item.estado === 1 && (
                                             <>
-                                                <Link href={`/preguntas/${item.id}`}>
-                                                    <FiEdit className="edit-button" />
+                                                <Link href={`/asignaciones/${item.id}`}>
+                                                    <TbReportSearch className="edit-button" />
                                                 </Link>
-                                                <button onClick={() => handleDelete(item.id)}>
-                                                    <MdDelete className="delete-button" />
-                                                </button>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <button onClick={() => handleActive(item.id)} aria-label="Activar registro">
-                                                    <FaCheck className="active-button" />
-                                                </button>
+                                                <Link href={`/asignaciones/${item.id}`}>
+                                                    <TbReport className="show-button" />
+                                                </Link>
+                                                <Link href={`/asignaciones/${item.id}`}>
+                                                    <TbReportAnalytics  className="active-button" />
+                                                </Link>
                                             </>
                                         )}
-
                                     </td>
                                 </tr>
                             ))
@@ -146,4 +119,4 @@ const indexPageTable = ({ preguntas: inixialPreguntas }) => {
 };
 
 
-export default indexPageTable;
+export default AsignacionesTable;
