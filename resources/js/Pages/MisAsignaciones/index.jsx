@@ -98,7 +98,7 @@ const AsignacionesTable = ({ asignaciones: inixialAsignaciones }) => {
                                                     <TbReport className="show-button" />
                                                 </Link>
                                                 <Link href={`/asignaciones/${item.id}`}>
-                                                    <TbReport className="show-button" />
+                                                    <TbReportAnalytics  className="active-button" />
                                                 </Link>
                                             </>
                                         )}
